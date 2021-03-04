@@ -6,7 +6,7 @@ import java.util.StringTokenizer;
 /**
  * 구슬탈출2(13460)
  */
-public class Main13460 {
+public class Main13460_DFS {
     //위, 아래, 오, 왼
     public static final int[] dx = {0, 0, 1, -1};
     public static final int[] dy = {1, -1, 0, 0};
