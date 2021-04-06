@@ -103,7 +103,7 @@ public class Main14500 {
         int[] specialXs = specials.get(dir * 2);
         int[] specialYs = specials.get(dir * 2 + 1);
 
-        int[] sortSpecialXs = specialXs.
+//        int[] sortSpecialXs =
         Arrays.sort(specialXs.clone());
         Arrays.sort(specialYs.clone());
 
