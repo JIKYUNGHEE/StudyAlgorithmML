@@ -10,24 +10,15 @@ import java.util.Queue;
 
 /**
  * 14891 톱니바퀴
- * <p>
- * [input]
- * 10101111
- * 01111101
- * 11001110
- * 00000010
- * 2
- * 3 -1
- * 1 1
  */
 public class Main14891 {
     private static final int LEFT = -1;
     private static final int RIGHT = 1;
 
-    private static Map<Integer, String> gearsMap = new HashMap<>();
-    private static Queue<String> rotateQueue = new LinkedList<>();
-    private static boolean[] visited = new boolean[4];
-    private static int[] moveDirs = new int[4];
+    private static Map<Integer, String> gearsMap = new HashMap<>(); //톱니바퀴를 넣은 Map
+    private static Queue<String> rotateQueue = new LinkedList<>();  //회전정보를 넣은 Queue
+    private static boolean[] visited = new boolean[4];              //방문정보를 넣은 배열
+    private static int[] moveDirs = new int[4];                     //움직이는 정보를 넣은 배
 
     public static void main(String[] args) throws IOException {
         ////////////////////// [input] //////////////////////
@@ -93,14 +84,14 @@ public class Main14891 {
             String nextGear = gearsMap.get(rotateNumber + 1);
             int nextNumber6 = Character.getNumericValue(nextGear.charAt(6));
             //다음 번호의 방향을 세팅한다.
-            nextRotateDir = (number2 == nextNumber6) ? 0 : nextRotateDir;
+            nextRotateDir = (rotateDir == 0) ? 0 : (number2 == nextNumber6) ? 0 : nextRotateDir;
             configureMoveDir(rotateNumber + 1, nextRotateDir);
         }
 
         if (rotateNumber > 0) { //이전번호를 뽑는다.
             String preGear = gearsMap.get(rotateNumber - 1);
             int preNumber2 = Character.getNumericValue(preGear.charAt(2));
-            nextRotateDir = (number6 == preNumber2) ? 0 : nextRotateDir;
+            nextRotateDir = (rotateDir == 0) ? 0 : (number6 == preNumber2) ? 0 : nextRotateDir;
             //이전 번호의 방향을 세팅한다.
             configureMoveDir(rotateNumber - 1, nextRotateDir);
         }
