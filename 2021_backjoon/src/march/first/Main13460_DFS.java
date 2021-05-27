@@ -76,7 +76,7 @@ public class Main13460_DFS {
         }
 
         for (int i = 0; i < 4; i++) {
-            if (isSameDirection(i, dir)) continue;
+//            if (isSameDirection(i, dir)) continue;
 
             Ball next = new Ball();
             int bx = now.bx;

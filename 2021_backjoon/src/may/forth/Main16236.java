@@ -8,6 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+/**
+ * 아기상어
+ *
+ *
+ */
 public class Main16236 {
 
     private static int N;
@@ -43,7 +48,7 @@ public class Main16236 {
         BabyShark(int x, int y) {
             this.x = x;
             this.y = y;
-            this.size = 1;
+            this.size = 2;
         }
     }
 
@@ -75,6 +80,10 @@ public class Main16236 {
         bfs(0, 0);
 
         return isFindEatenFish;
+    }
+
+    private static void dfs() {
+
     }
 
     private static void bfs(int x, int y) {
