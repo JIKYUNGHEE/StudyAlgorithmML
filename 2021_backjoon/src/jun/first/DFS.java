@@ -13,7 +13,7 @@ public class DFS {
     private static int N;
     private static int M;
     private static int[][] map;
-    private static boolean[][] visited;
+    private static boolean[][] visited; //방문 표시할
 
     private static final int LAST_INDEX = 3;
 
