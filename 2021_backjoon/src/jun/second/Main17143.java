@@ -9,12 +9,12 @@ import java.util.*;
  * 낚시왕
  */
 public class Main17143 {
-    private static int R;
-    private static int C;
+    private static int R;   //전체 행
+    private static int C;   //전체 열
     private static int M;   //상어의 개수
 
     private static int[][] map;
-    private static List<Shark> sharksInTheMap = new ArrayList<>();
+    private static List<Shark> sharksInTheMapList = new ArrayList<>();
 
     enum Direction {
         NONE, TOP, BOTTOM, LEFT, RIGHT;
@@ -44,9 +44,30 @@ public class Main17143 {
         }
     }
 
-    static class Shark {
+    static class Position {
         int r;
         int c;
+
+        public Position(int r, int c) {
+            this.r = r;
+            this.c = c;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            Position position = (Position) o;
+            return r == position.r && c == position.c;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(r, c);
+        }
+    }
+
+    static class Shark {
+        int r;  //행
+        int c;  //열
         int s;  //스피드
         Direction d;  //방향
         int z;  //사이즈
@@ -60,35 +81,41 @@ public class Main17143 {
         }
 
         public void move() {
-            int remainBlocks = -1;   //더 가야하는 블록 개수(속도가 남은 개수보다 빨라서, 더 가야하는 개수)
+            int moveBlocks = 0;   //더 가야하는 블록 개수(속도가 남은 개수보다 빨라서, 더 가야하는 개수)
+            int remainBlocks = s;
 
-            while (remainBlocks == 0) {
+            while (true) {
                 map[r][c]--;
 
                 switch (d) {
                     case TOP:
+                        moveBlocks = r - 1;
+                        break;
                     case BOTTOM:
-                        if (s > R - r) {
-                            remainBlocks = (s - (R - r));
-                        } else {
-                            remainBlocks = 0;
-                        }
+                        moveBlocks = R - r;
                         break;
                     case LEFT:
+                        moveBlocks = c - 1;
+                        break;
                     case RIGHT:
-                        if (s > C - c) {
-                            remainBlocks = (s - (C - c));
-                        } else {
-                            remainBlocks = 0;
-                        }
+                        moveBlocks = C - c;
                         break;
                 }
 
-                justMove(s - remainBlocks);
-                d = d.oppositeSide(d);
-                justMove(remainBlocks); //while 돌려야
+                if (moveBlocks > remainBlocks) {
+                    moveBlocks = remainBlocks;
+                    remainBlocks = 0;
+                }
 
+                justMove(moveBlocks);
                 map[r][c]++;
+
+                if (remainBlocks == 0) {
+                    break;
+                }
+
+                d = d.oppositeSide(d);
+                remainBlocks -= moveBlocks;
             }
         }
 
@@ -115,7 +142,7 @@ public class Main17143 {
     }
 
     static class KingOfFisher {
-        int c;
+        int c;  //열
         List<Shark> catchSharkList;
 
         KingOfFisher() {
@@ -134,7 +161,7 @@ public class Main17143 {
 
         private Shark findNearestShark() {
             Shark theShark = null;
-            for (Shark shark : sharksInTheMap) {
+            for (Shark shark : sharksInTheMapList) {
                 if (shark.c == c) {
                     if (theShark != null) {
                         theShark = (shark.r < theShark.r) ? shark : theShark;
@@ -151,7 +178,7 @@ public class Main17143 {
             if (theShark != null) {
                 catchSharkList.add(theShark);
                 map[theShark.r][theShark.c]--;
-                sharksInTheMap.remove(theShark);
+                sharksInTheMapList.remove(theShark);
             }
         }
 
@@ -174,7 +201,7 @@ public class Main17143 {
             kingOfFisher.move();            //낚시왕이 오른쪽으로 한칸 이동한다.
             kingOfFisher.fish();             //낚시왕이 자신과 제일 가까운 상어를 잡는다.
 
-            for (Shark shark : sharksInTheMap) {
+            for (Shark shark : sharksInTheMapList) {
                 shark.move();             //상어가 이동한다.
             }
 
@@ -185,10 +212,12 @@ public class Main17143 {
         System.out.println(kingOfFisher.getTotalSizeOfCaughtSharks());
     }
 
+    private static void putTheBiggestSharks() {
+
+    }
+
     private static void eatSharks() {
-        //한 칸의 상어가 2마리 이상일 때
-        //크기가 큰 상어가 남는다.
-        for (int x = 0; x < map.length; x++) {
+        for (int x = 0; x < map.length; x++) {         //한 칸의 상어가 2마리 이상일 때
             for (int y = 0; y < map[x].length; y++) {
                 if (map[x][y] > 1) {
                     map[x][y] = 1;
@@ -215,7 +244,7 @@ public class Main17143 {
             int d = Integer.parseInt(st.nextToken());
             int z = Integer.parseInt(st.nextToken());
 
-            sharksInTheMap.add(new Shark(r, c, s, d, z));
+            sharksInTheMapList.add(new Shark(r, c, s, d, z));
             map[r][c] = 1;
         }
     }
