@@ -1,4 +1,4 @@
-package jun.second;
+package jun.forth;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,7 @@ public class Main17143 {
     private static int M;   //상어의 개수
 
     private static int[][] map;
-    private static List<Shark> sharksInTheMapList = new ArrayList<>();
+    private static List<Shark> sharksList = new ArrayList<>();
 
     enum Direction {
         NONE, TOP, BOTTOM, LEFT, RIGHT;
@@ -81,7 +81,7 @@ public class Main17143 {
         }
 
         public void move() {
-            int moveBlocks = 0;   //더 가야하는 블록 개수(속도가 남은 개수보다 빨라서, 더 가야하는 개수)
+            int moveBlocks = 0;   //갈 수 있는 블록의 개수
             int remainBlocks = s;
 
             while (true) {
@@ -102,7 +102,7 @@ public class Main17143 {
                         break;
                 }
 
-                if (moveBlocks > remainBlocks) {
+                if (moveBlocks >= remainBlocks) {
                     moveBlocks = remainBlocks;
                     remainBlocks = 0;
                 }
@@ -161,7 +161,7 @@ public class Main17143 {
 
         private Shark findNearestShark() {
             Shark theShark = null;
-            for (Shark shark : sharksInTheMapList) {
+            for (Shark shark : sharksList) {
                 if (shark.c == c) {
                     if (theShark != null) {
                         theShark = (shark.r < theShark.r) ? shark : theShark;
@@ -178,7 +178,7 @@ public class Main17143 {
             if (theShark != null) {
                 catchSharkList.add(theShark);
                 map[theShark.r][theShark.c]--;
-                sharksInTheMapList.remove(theShark);
+                sharksList.remove(theShark);
             }
         }
 
@@ -201,7 +201,7 @@ public class Main17143 {
             kingOfFisher.move();            //낚시왕이 오른쪽으로 한칸 이동한다.
             kingOfFisher.fish();             //낚시왕이 자신과 제일 가까운 상어를 잡는다.
 
-            for (Shark shark : sharksInTheMapList) {
+            for (Shark shark : sharksList) {
                 shark.move();             //상어가 이동한다.
             }
 
@@ -220,10 +220,32 @@ public class Main17143 {
         for (int x = 0; x < map.length; x++) {         //한 칸의 상어가 2마리 이상일 때
             for (int y = 0; y < map[x].length; y++) {
                 if (map[x][y] > 1) {
-                    map[x][y] = 1;
+                    eatShark(x, y);
                 }
             }
         }
+    }
+
+    private static void eatShark(int x, int y) {
+        List<Shark> sameDirSharkList = new LinkedList<>();
+        Shark biggestShark = null;
+        for (int i = 0; i < sharksList.size(); i++) {
+            Shark shark = sharksList.get(i);
+            if(shark.r == x && shark.c == y) {
+                if(biggestShark != null) {
+                    biggestShark = (shark.z > biggestShark.z) ? shark : biggestShark;
+                } else {
+                    biggestShark = shark;
+                }
+                sameDirSharkList.add(shark);
+            }
+        }
+
+        for (Shark shark : sameDirSharkList) {
+            sharksList.remove(shark);
+        }
+
+        map[x][y] = 1;
     }
 
     private static void input() throws IOException {
@@ -244,7 +266,7 @@ public class Main17143 {
             int d = Integer.parseInt(st.nextToken());
             int z = Integer.parseInt(st.nextToken());
 
-            sharksInTheMapList.add(new Shark(r, c, s, d, z));
+            sharksList.add(new Shark(r, c, s, d, z));
             map[r][c] = 1;
         }
     }
